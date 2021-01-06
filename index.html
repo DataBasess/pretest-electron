@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <style>
+        .card {
+            background-color: antiquewhite;
+            width: 400px;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body style="background: white;">
+    <div class="card">
+        <label for="">A</label>
+        <input type="text" id="A">
+        <br>
+        <label for="">B</label>
+        <input type="text" id="B">
+        <input type="hidden" id="C">
+        <br>
+        <button id="1">+</button>
+        <button id="2">-</button>
+        <button id="3">x</button>
+        <button id="4">/</button>
+        <button id="5">Pow</button>
+        <br>
+        <label for="">Result</label>
+        <input type="text" id="D">
+        <br>
+        <button id="6">Load</button>
+        <button id="7">Save</button>
+    </div>
+</body>
+<script>
+    const btnclick = document.getElementById('5');
+    btnclick.addEventListener('click', function() {
+        let A = +document.getElementById("A").value
+        let B = +document.getElementById("B").value
+        let C = document.getElementById("C").value
+        console.log(A, B, C)
+        let result = 0;
+        switch (C) {
+            case '1':
+                result = +A + B;
+                document.getElementById("D").value = result;
+                break;
+            case '2':
+                result = +A - B;
+                document.getElementById("D").value = result;
+                break;
+            case '3':
+                result = +A * B;
+                document.getElementById("D").value = result;
+                break;
+            case '4':
+                result = +A / B;
+                document.getElementById("D").value = result;
+                break;
+
+            default:
+                break;
+        }
+    });
+
+    const opt1click = document.getElementById("1");
+    opt1click.addEventListener('click', function() {
+        document.getElementById("C").value = 1
+    });
+    const opt2click = document.getElementById("2");
+    opt2click.addEventListener('click', function() {
+        document.getElementById("C").value = 2
+    });
+    const opt3click = document.getElementById("3");
+    opt3click.addEventListener('click', function() {
+        document.getElementById("C").value = 3
+    });
+    const opt4click = document.getElementById("4");
+    opt4click.addEventListener('click', function() {
+        document.getElementById("C").value = 4
+    });
+
+
+    const storage = require('electron-json-storage');
+    const fs = require('fs');
+
+    const loadclick = document.getElementById("6");
+    loadclick.addEventListener('click', function() {
+        const dataPath = storage.getDataPath();
+        // console.log(dataPath);
+        let rawdata = fs.readFileSync('calulator.json');
+        let calulator = JSON.parse(rawdata);
+        console.log(calulator);
+        document.getElementById("A").value = calulator.A
+        document.getElementById("B").value = calulator.B
+        document.getElementById("C").value = calulator.C
+        document.getElementById("D").value = calulator.D
+    });
+    const saveclick = document.getElementById("7");
+    saveclick.addEventListener('click', function() {
+        const dataPath = storage.getDataPath();
+        // console.log(dataPath);
+        let A = +document.getElementById("A").value
+        let B = +document.getElementById("B").value
+        let C = document.getElementById("C").value
+        let D = +document.getElementById("D").value
+        let local = {
+            A: A,
+            B: B,
+            C: C,
+            D: D,
+        };
+
+        let data = JSON.stringify(local);
+        fs.writeFileSync('calulator.json', data);
+    });
+</script>
+
+</html>
